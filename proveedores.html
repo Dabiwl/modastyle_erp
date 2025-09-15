@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Proveedores - ERP</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+  <nav class="breadcrumb">
+    <ul>
+      <li><a href="index.html" class="active">Volver al Inicio</a></li>
+    </ul>
+  </nav>
+
+  <h1>Proveedores</h1>
+
+  <form onsubmit="registrarCompra(); return false;">
+    <div class="campo">
+      <select id="materialSelect">
+        <option value="">-- Selecciona un material --</option>
+      </select>
+      <input type="number" id="cantidad" placeholder="Cantidad">
+      <input type="number" id="valorUnitario" placeholder="Valor unitario">
+      <button type="submit">Agregar Compra</button>
+    </div>
+  </form>
+
+  <h2>¿Material no existe? Agregar nuevo:</h2>
+  <form onsubmit="agregarMaterial(); return false;">
+    <div class="campo">
+      <input type="text" id="nuevoId" placeholder="ID del material">
+      <input type="text" id="nuevoNombre" placeholder="Nombre del material">
+      <button type="submit">Agregar Material</button>
+    </div>
+  </form>
+
+  <h2>Historial de Compras</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Factura</th>
+        <th>ID</th>
+        <th>Material</th>
+        <th>Cantidad</th>
+        <th>Valor Unitario</th>
+        <th>Total</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="tablaCompras"></tbody>
+  </table>
+
+  <h3>Total Acumulado: $<span id="total">0</span></h3>
+
+  <script>
+    let factura = 1;
+    let total = 0;
+    let modoEdicion = false;
+    let indexEditar = null;
+
+    const compras = [];
+    const materiales = [
+      { id: 'M01', nombre: 'Arena de sílice' },
+      { id: 'M02', nombre: 'Ceniza de sosa' },
+      { id: 'M03', nombre: 'Caliza (carbonato de calcio)' },
+      { id: 'M04', nombre: 'Boro (óxido de boro)' },
+      { id: 'M05', nombre: 'Feldespato' },
+      { id: 'M06', nombre: 'Arcilla' },
+      { id: 'M07', nombre: 'Cullet (vidrio reciclado)' },
+      { id: 'M08', nombre: 'Magnesita' }
+    ];
+
+    function cargarMateriales() {
+      const select = document.getElementById('materialSelect');
+      select.innerHTML = '<option value="">-- Selecciona un material --</option>';
+      materiales.forEach(mat => {
+        const option = document.createElement('option');
+        option.value = mat.id;
+        option.textContent = `${mat.id} - ${mat.nombre}`;
+        select.appendChild(option);
+      });
+    }
+
+    function registrarCompra() {
+      const materialId = document.getElementById('materialSelect').value;
+      const cantidad = parseInt(document.getElementById('cantidad').value);
+      const valor = parseFloat(document.getElementById('valorUnitario').value);
+      const material = materiales.find(m => m.id === materialId);
+
+      if (!materialId || isNaN(cantidad) || isNaN(valor)) {
+        alert("Completa todos los campos correctamente.");
+        return;
+      }
+
+      const compra = {
+        factura: factura,
+        id: material.id,
+        nombre: material.nombre,
+        cantidad,
+        valorUnitario: valor,
+        total: cantidad * valor
+      };
+
+      if (modoEdicion) {
+        compras[indexEditar] = compra;
+        modoEdicion = false;
+        indexEditar = null;
+      } else {
+        compras.push(compra);
+        factura++;
+      }
+
+      actualizarTabla();
+      limpiarFormulario();
+    }
+
+    function actualizarTabla() {
+      const tabla = document.getElementById('tablaCompras');
+      tabla.innerHTML = '';
+      total = 0;
+
+      compras.forEach((c, index) => {
+        const fila = tabla.insertRow();
+        fila.insertCell(0).textContent = c.factura;
+        fila.insertCell(1).textContent = c.id;
+        fila.insertCell(2).textContent = c.nombre;
+        fila.insertCell(3).textContent = c.cantidad;
+        fila.insertCell(4).textContent = `$${c.valorUnitario.toFixed(2)}`;
+        fila.insertCell(5).textContent = `$${c.total.toFixed(2)}`;
+        total += c.total;
+
+        const celdaAcciones = fila.insertCell(6);
+        const btnEditar = document.createElement('button');
+        btnEditar.textContent = 'Editar';
+        btnEditar.onclick = () => cargarParaEditar(index);
+
+        const btnEliminar = document.createElement('button');
+        btnEliminar.textContent = 'Eliminar';
+        btnEliminar.classList.add('eliminar');
+        btnEliminar.onclick = () => {
+          if (confirm(`¿Eliminar compra de ${c.nombre}?`)) {
+            compras.splice(index, 1);
+            actualizarTabla();
+          }
+        };
+
+        celdaAcciones.appendChild(btnEditar);
+        celdaAcciones.appendChild(btnEliminar);
+      });
+
+      document.getElementById('total').textContent = total.toFixed(2);
+    }
+
+    function cargarParaEditar(index) {
+      const c = compras[index];
+      document.getElementById('materialSelect').value = c.id;
+      document.getElementById('cantidad').value = c.cantidad;
+      document.getElementById('valorUnitario').value = c.valorUnitario;
+      modoEdicion = true;
+      indexEditar = index;
+    }
+
+    function agregarMaterial() {
+      const id = document.getElementById('nuevoId').value.trim();
+      const nombre = document.getElementById('nuevoNombre').value.trim();
+
+      if (!id || !nombre) {
+        alert("Completa ID y nombre.");
+        return;
+      }
+
+      if (materiales.some(m => m.id === id)) {
+        alert("Ya existe ese ID.");
+        return;
+      }
+
+      materiales.push({ id, nombre });
+      cargarMateriales();
+      alert("Material agregado.");
+      document.getElementById('nuevoId').value = '';
+      document.getElementById('nuevoNombre').value = '';
+    }
+
+    function limpiarFormulario() {
+      document.getElementById('materialSelect').value = '';
+      document.getElementById('cantidad').value = '';
+      document.getElementById('valorUnitario').value = '';
+    }
+
+    window.onload = cargarMateriales;
+  </script>
+
+</body>
+</html>

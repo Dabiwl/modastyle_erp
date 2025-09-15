@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Módulo de Inventario - ERP</title>
+</head>
+<body>
+
+    <h1>Módulo de Inventario</h1>
+
+    <h2>Registrar Producto</h2>
+    <input type="text" id="nombreProducto" placeholder="Nombre del Producto">
+    <input type="number" id="cantidadProducto" placeholder="Cantidad">
+    <input type="number" id="stockMinimo" placeholder="Stock Mínimo">
+    <button onclick="agregarProducto()">Agregar al Inventario</button>
+
+    <h2>Inventario Actual</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Stock Mínimo</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tablaInventario">
+        </tbody>
+    </table>
+
+    <script>
+        function agregarProducto() {
+            const nombre = document.getElementById('nombreProducto').value;
+            const cantidad = parseInt(document.getElementById('cantidadProducto').value);
+            const stockMin = parseInt(document.getElementById('stockMinimo').value);
+
+            if (!nombre || isNaN(cantidad) || isNaN(stockMin)) {
+                alert('Por favor completa todos los campos correctamente.');
+                return;
+            }
+
+            const tabla = document.getElementById('tablaInventario');
+            const fila = tabla.insertRow();
+
+            const celdaNombre = fila.insertCell(0);
+            const celdaCantidad = fila.insertCell(1);
+            const celdaStockMin = fila.insertCell(2);
+            const celdaEstado = fila.insertCell(3);
+            const celdaAcciones = fila.insertCell(4);
+
+            celdaNombre.textContent = nombre;
+            celdaCantidad.textContent = cantidad;
+            celdaStockMin.textContent = stockMin;
+            celdaEstado.textContent = cantidad >= stockMin ? 'OK' : 'Bajo Stock';
+            celdaEstado.style.color = cantidad >= stockMin ? 'green' : 'red';
+
+            const botonActualizar = document.createElement('button');
+            botonActualizar.textContent = 'Actualizar Cantidad';
+            botonActualizar.onclick = function () {
+                const nuevaCantidad = parseInt(prompt('Ingrese nueva cantidad para ' + nombre));
+                if (!isNaN(nuevaCantidad)) {
+                    celdaCantidad.textContent = nuevaCantidad;
+                    celdaEstado.textContent = nuevaCantidad >= stockMin ? 'OK' : 'Bajo Stock';
+                    celdaEstado.style.color = nuevaCantidad >= stockMin ? 'green' : 'red';
+                }
+            };
+
+            celdaAcciones.appendChild(botonActualizar);
+
+            document.getElementById('nombreProducto').value = '';
+            document.getElementById('cantidadProducto').value = '';
+            document.getElementById('stockMinimo').value = '';
+        }
+    </script>
+
+</body>
+
+<header style="background-color: #f2f2f2; padding: 10px; text-align: center;">
+    <a href="index.html" style="text-decoration: none; font-size: 18px; color: #333;">Volver al Inicio</a>
+</header>
+
+</html>

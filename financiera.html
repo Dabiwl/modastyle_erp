@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Módulo Financiero - ERP</title>
+</head>
+
+<body>
+
+    <h1>Módulo Financiero</h1>
+
+    <h2>Registrar Movimiento</h2>
+    <input type="text" id="descripcion" placeholder="Descripción">
+    <input type="number" id="monto" placeholder="Monto">
+    <select id="tipo">
+        <option value="ingreso">Ingreso</option>
+        <option value="gasto">Gasto</option>
+    </select>
+    <button onclick="agregarMovimiento()">Agregar</button>
+
+    <h2>Historial de Movimientos</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Descripción</th>
+                <th>Tipo</th>
+                <th>Monto</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-movimientos">
+        </tbody>
+    </table>
+
+    <div id="saldo">Saldo Actual: $0</div>
+
+    <script>
+        let saldo = 0;
+
+        function agregarMovimiento() {
+            const descripcion = document.getElementById('descripcion').value;
+            const monto = parseFloat(document.getElementById('monto').value);
+            const tipo = document.getElementById('tipo').value;
+
+            if (!descripcion || isNaN(monto)) {
+                alert('Por favor completa todos los campos correctamente.');
+                return;
+            }
+
+            const tabla = document.getElementById('tabla-movimientos');
+            const fila = tabla.insertRow();
+
+            const celdaDescripcion = fila.insertCell(0);
+            const celdaTipo = fila.insertCell(1);
+            const celdaMonto = fila.insertCell(2);
+
+            celdaDescripcion.textContent = descripcion;
+            celdaTipo.textContent = tipo.charAt(0).toUpperCase() + tipo.slice(1);
+            celdaMonto.textContent = `$${monto.toFixed(2)}`;
+
+            if (tipo === 'ingreso') {
+                saldo += monto;
+            } else {
+                saldo -= monto;
+            }
+
+            document.getElementById('saldo').textContent = `Saldo Actual: $${saldo.toFixed(2)}`;
+
+            document.getElementById('descripcion').value = '';
+            document.getElementById('monto').value = '';
+        }
+    </script>
+
+</body>
+
+<header style="background-color: #f2f2f2; padding: 10px; text-align: center;">
+    <a href="index.html" style="text-decoration: none; font-size: 18px; color: #333;">Volver al Inicio</a>
+</header>
+
+
+</html>

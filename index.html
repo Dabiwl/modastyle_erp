@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ModaStyle ERP - Sistema de Gestión para Tiendas de Ropa</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-tshirt"></i>
+                    <h1>ModaStyle ERP</h1>
+                </div>
+                <div class="user-actions">
+                    <button class="btn btn-outline" id="notifications-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <button class="btn btn-outline" id="settings-btn">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <button class="btn btn-primary" id="user-btn">
+                        <i class="fas fa-user"></i> <span id="username">Admin</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <section class="dashboard-header">
+                <h2>Panel Principal</h2>
+                <p>Gestiona todos los aspectos de tu tienda de ropa desde un solo lugar</p>
+            </section>
+
+            <section class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon sales">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="sales-today">0</h3>
+                        <p>Ventas Hoy</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon inventory">
+                        <i class="fas fa-warehouse"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="products-stock">0</h3>
+                        <p>Productos en Stock</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon clients">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="clients-count">0</h3>
+                        <p>Clientes Registrados</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon employees">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="employees-count">0</h3>
+                        <p>Empleados</p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="tabs">
+                <button class="tab-btn" id="admin-tab">Módulos Administrativos</button>
+                <button class="tab-btn active" id="client-tab">Módulos de Cliente</button>
+            </div>
+
+            <section id="client-modules" class="tab-content active">
+                <h2>Módulos de Gestión de Clientes</h2>
+                <div class="modules-grid">
+                    <div class="module-card client-module">
+                        <div class="module-icon">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="module-content">
+                            <h3>Gestión de Clientes</h3>
+                            <p>Administra la información de tus clientes, historial de compras y datos de contacto.</p>
+                            <a href="#" class="module-link" data-module="clientes" id="manage-clients-btn">
+                                Acceder al módulo <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="module-card client-module">
+                        <div class="module-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="module-content">
+                            <h3>Programa de Fidelidad</h3>
+                            <p>Gestiona sistema de puntos, recompensas y beneficios para clientes frecuentes.</p>
+                            <a href="#" class="module-link" data-module="fidelidad">
+                                Acceder al módulo <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="module-card client-module">
+                        <div class="module-icon">
+                            <i class="fas fa-comment-alt"></i>
+                        </div>
+                        <div class="module-content">
+                            <h3>Comunicaciones</h3>
+                            <p>Gestiona campañas de email marketing, SMS y notificaciones para tus clientes.</p>
+                            <a href="#" class="module-link" data-module="comunicaciones">
+                                Acceder al módulo <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="module-card client-module">
+                        <div class="module-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="module-content">
+                            <h3>Reseñas y Opiniones</h3>
+                            <p>Monitoriza y responde a las valoraciones de los clientes sobre tus productos.</p>
+                            <a href="#" class="module-link" data-module="resenas">
+                                Acceder al módulo <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="module-card client-module">
+                        <div class="module-icon">
+                            <i class="fas fa-tags"></i>
+                        </div>
+                        <div class="module-content">
+                            <h3>Promociones Especiales</h3>
+                            <p>Crea y gestiona descuentos personalizados y ofertas para segmentos de clientes.</p>
+                            <a href="#" class="module-link" data-module="promociones">
+                                Acceder al módulo <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="module-card client-module">
+                        <div class="module-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="module-content">
+                            <h3>Pedidos Online</h3>
+                            <p>Gestiona pedidos realizados a través de tu e-commerce y su seguimiento.</p>
+                            <a href="#" class="module-link" data-module="pedidos">
+                                Acceder al módulo <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sección para mostrar clientes (inicialmente oculta) -->
+                <div id="clients-management-section" style="display: none;">
+                    <div class="section-header">
+                        <h3>Gestión de Clientes</h3>
+                        <button class="btn btn-primary" id="add-client-btn">
+                            <i class="fas fa-plus"></i> Nuevo Cliente
+                        </button>
+                    </div>
+                    
+                    <div class="filters">
+                        <input type="text" id="client-search" placeholder="Buscar clientes...">
+                        <select id="client-filter">
+                            <option value="all">Todos los clientes</option>
+                            <option value="active">Solo activos</option>
+                            <option value="inactive">Solo inactivos</option>
+                        </select>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table id="clients-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Email</th>
+                                    <th>Teléfono</th>
+                                    <th>Puntos</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="clients-list">
+                                <!-- Los clientes se cargarán aquí dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="quick-actions">
+                    <h3>Acciones Rápidas</h3>
+                    <div class="actions-container">
+                        <button class="btn btn-client" id="new-client-btn">
+                            <i class="fas fa-plus"></i> Nuevo Cliente
+                        </button>
+                        <button class="btn btn-client" id="send-promo-btn">
+                            <i class="fas fa-envelope"></i> Enviar Promoción
+                        </button>
+                        <button class="btn btn-client" id="analytics-btn">
+                            <i class="fas fa-chart-pie"></i> Ver Analytics
+                        </button>
+                        <button class="btn btn-client" id="birthdays-btn">
+                            <i class="fas fa-birthday-cake"></i> Cumpleaños Hoy
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="admin-modules" class="tab-content">
+                <h2>Módulos Administrativos</h2>
+                <div class="modules-grid">
+                    <div class="module-card">
+                        <div class="module-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="module-content">
+                            <h3>Proveedores</h3>
+                            <p>Gestiona tus relaciones con proveedores, controla pedidos y revisa historiales de entrega.</p>
+                            <a href="#" class="module-link" data-module="proveedores">
+                                Acceder al módulo <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-icon">
+                            <i class="fas fa-cash-register"></i>
+                        </div>
+                        <div class="module-content">
+                            <h3>Ventas</h3>
+                            <p>Controla tus ventas, gestiona transacciones y analiza el rendimiento de tu tienda.</p>
+                            <a href="#" class="module-link" data-module="ventas">
+                                Acceder al módule <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-icon">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div class="module-content">
+                            <h3>Recursos Humanos</h3>
+                            <p>Administra tu equipo, controla nóminas, horarios y beneficios para empleados.</p>
+                            <a href="#" class="module-link" data-module="rh">
+                                Acceder al módulo <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-icon">
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                        <div class="module-content">
+                            <h3>Inventario</h3>
+                            <p>Controla tu stock, gestiona productos y recibe alertas de inventario bajo.</p>
+                            <a href="#" class="module-link" data-module="inventario">
+                                Acceder al módulo <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="module-content">
+                            <h3>Reportes</h3>
+                            <p>Genera reportes detallados de ventas, inventario y rendimiento de tu negocio.</p>
+                            <a href="#" class="module-link" data-module="reportes">
+                                Acceder al módulo <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="module-content">
+                            <h3>Finanzas</h3>
+                            <p>Gestiona cuentas, gastos, ingresos y estados financieros de tu negocio.</p>
+                            <a href="#" class="module-link" data-module="finanzas">
+                                Acceder al módulo <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2023 ModaStyle ERP - Sistema de gestión para tiendas de ropa</p>
+                <div class="footer-links">
+                    <a href="#">Ayuda</a>
+                    <a href="#">Soporte</a>
+                    <a href="#">Privacidad</a>
+                    <a href="#">Términos de uso</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal para notificaciones -->
+    <div id="notifications-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Notificaciones</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <ul id="notifications-list">
+                    <li>Nuevo pedido recibido #12345</li>
+                    <li>Stock bajo para "Vestido Negro M"</li>
+                    <li>Mensaje de Juan Pérez sobre su pedido</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para formulario de cliente (nuevo) -->
+    <div id="client-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="client-modal-title">Nuevo Cliente</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="client-form">
+                    <input type="hidden" id="client-id">
+                    <div class="form-group">
+                        <label for="client-name">Nombre *</label>
+                        <input type="text" id="client-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="client-email">Email *</label>
+                        <input type="email" id="client-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="client-phone">Teléfono</label>
+                        <input type="text" id="client-phone">
+                    </div>
+                    <div class="form-group">
+                        <label for="client-address">Dirección</label>
+                        <textarea id="client-address"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="client-birthdate">Fecha de Nacimiento</label>
+                        <input type="date" id="client-birthdate">
+                    </div>
+                    <div class="form-group">
+                        <label for="client-gender">Género</label>
+                        <select id="client-gender">
+                            <option value="">Seleccionar</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Femenino">Femenino</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="client-status">Estado</label>
+                        <select id="client-status">
+                            <option value="Activo">Activo</option>
+                            <option value="Inactivo">Inactivo</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-cancel" id="cancel-client-form">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar Cliente</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts JavaScript -->
+    <script src="js/api.js"></script>
+    <script src="js/modules.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

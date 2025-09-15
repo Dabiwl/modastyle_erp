@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Recursos Humanos</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+  <nav class="breadcrumb">
+    <ul>
+      <li><a href="index.html" class="active">Volver al Inicio</a></li>
+    </ul>
+  </nav>
+
+  <h1>Recursos Humanos</h1>
+
+  <h2>Valor por hora trabajada</h2>
+  <div class="campo">
+    <input type="number" id="valorHora" value="5000" placeholder="Valor por hora">
+    <button onclick="actualizarPagos()">Actualizar pagos</button>
+  </div>
+
+  <h2>Registrar Empleado</h2>
+  <form onsubmit="agregarEmpleado(); return false;">
+    <div class="campo">
+      <input type="text" id="nombreEmpleado" placeholder="Nombre del empleado">
+      <input type="text" id="cargoEmpleado" placeholder="Cargo">
+      <input type="text" id="turnoEmpleado" placeholder="Turno (mañana, tarde, noche)">
+      <input type="number" id="horasTrabajadas" placeholder="Horas trabajadas">
+      <button type="submit">Agregar Empleado</button>
+    </div>
+  </form>
+
+  <h2>Lista de Empleados</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Cargo</th>
+        <th>Turno</th>
+        <th>Horas</th>
+        <th>Total a Pagar</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="tablaEmpleados"></tbody>
+  </table>
+
+  <script>
+    let empleados = [];
+    let modoEdicion = false;
+    let indiceEditar = null;
+
+    function agregarEmpleado() {
+      const nombre = document.getElementById('nombreEmpleado').value.trim();
+      const cargo = document.getElementById('cargoEmpleado').value.trim();
+      const turno = document.getElementById('turnoEmpleado').value.trim();
+      const horas = parseFloat(document.getElementById('horasTrabajadas').value);
+      const valorHora = parseFloat(document.getElementById('valorHora').value);
+
+      if (!nombre || !cargo || !turno || isNaN(horas)) {
+        alert("Completa todos los campos correctamente.");
+        return;
+      }
+
+      const empleado = { nombre, cargo, turno, horas, valorHora };
+
+      if (modoEdicion) {
+        empleados[indiceEditar] = empleado;
+        modoEdicion = false;
+        indiceEditar = null;
+      } else {
+        empleados.push(empleado);
+      }
+
+      actualizarTabla();
+      limpiarFormulario();
+    }
+
+    function actualizarTabla() {
+      const tabla = document.getElementById('tablaEmpleados');
+      tabla.innerHTML = '';
+
+      empleados.forEach((emp, index) => {
+        const fila = tabla.insertRow();
+
+        fila.insertCell(0).textContent = emp.nombre;
+        fila.insertCell(1).textContent = emp.cargo;
+        fila.insertCell(2).textContent = emp.turno;
+        fila.insertCell(3).textContent = emp.horas;
+        fila.insertCell(4).textContent = `$${(emp.horas * emp.valorHora).toFixed(2)}`;
+
+        const celdaAcciones = fila.insertCell(5);
+
+        const btnEditar = document.createElement('button');
+        btnEditar.textContent = 'Editar';
+        btnEditar.onclick = function () {
+          cargarFormularioParaEditar(index);
+        };
+
+        const btnEliminar = document.createElement('button');
+        btnEliminar.textContent = 'Eliminar';
+        btnEliminar.classList.add('eliminar');
+        btnEliminar.onclick = function () {
+          if (confirm(`¿Eliminar a ${emp.nombre}?`)) {
+            empleados.splice(index, 1);
+            actualizarTabla();
+          }
+        };
+
+        celdaAcciones.appendChild(btnEditar);
+        celdaAcciones.appendChild(btnEliminar);
+      });
+    }
+
+    function cargarFormularioParaEditar(index) {
+      const emp = empleados[index];
+      document.getElementById('nombreEmpleado').value = emp.nombre;
+      document.getElementById('cargoEmpleado').value = emp.cargo;
+      document.getElementById('turnoEmpleado').value = emp.turno;
+      document.getElementById('horasTrabajadas').value = emp.horas;
+      modoEdicion = true;
+      indiceEditar = index;
+    }
+
+    function actualizarPagos() {
+      const nuevoValor = parseFloat(document.getElementById('valorHora').value);
+      if (isNaN(nuevoValor)) {
+        alert("Ingresa un valor por hora valido.");
+        return;
+      }
+
+      empleados = empleados.map(emp => ({ ...emp, valorHora: nuevoValor }));
+      actualizarTabla();
+    }
+
+    function limpiarFormulario() {
+      document.getElementById('nombreEmpleado').value = '';
+      document.getElementById('cargoEmpleado').value = '';
+      document.getElementById('turnoEmpleado').value = '';
+      document.getElementById('horasTrabajadas').value = '';
+    }
+  </script>
+
+</body>
+</html>

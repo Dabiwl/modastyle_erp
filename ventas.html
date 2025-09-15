@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ventas</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+  <nav class="breadcrumb">
+    <ul>
+      <li><a href="index.html" class="active">Volver al Inicio</a></li>
+    </ul>
+  </nav>
+
+  <h1>Ventas</h1>
+
+  <form onsubmit="registrarVenta(); return false;">
+    <div class="campo">
+      <select id="productoSelect">
+        <option value="">-- Selecciona un producto --</option>
+      </select>
+      <input type="number" id="cantidadVenta" placeholder="Cantidad">
+      <input type="number" id="valorUnitarioVenta" placeholder="Precio unitario">
+      <button type="submit">Agregar Venta</button>
+    </div>
+  </form>
+
+  <h2>¿Producto no existe? Agregar nuevo:</h2>
+  <form onsubmit="agregarProducto(); return false;">
+    <div class="campo">
+      <input type="text" id="nuevoIdProducto" placeholder="ID del producto">
+      <input type="text" id="nuevoNombreProducto" placeholder="Nombre del producto">
+      <button type="submit">Agregar Producto</button>
+    </div>
+  </form>
+
+  <h2>Historial de Ventas</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Factura</th>
+        <th>ID</th>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Precio Unitario</th>
+        <th>Total</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="tablaVentas"></tbody>
+  </table>
+
+  <h3>Total Acumulado: $<span id="totalVentas">0</span></h3>
+
+  <script>
+    let facturaVenta = 1;
+    let totalVentas = 0;
+    let modoEdicion = false;
+    let indexEditar = null;
+
+    const ventas = [];
+    const productos = [
+      { id: '001', nombre: 'Ampollas StandardLine' },
+      { id: '002', nombre: 'Ampollas easyOPC' },
+      { id: '003', nombre: 'Ampolleta CA (antifalsificación)' }
+    ];
+
+    function cargarProductos() {
+      const select = document.getElementById('productoSelect');
+      select.innerHTML = '<option value="">-- Selecciona un producto --</option>';
+      productos.forEach(prod => {
+        const option = document.createElement('option');
+        option.value = prod.id;
+        option.textContent = `${prod.id} - ${prod.nombre}`;
+        select.appendChild(option);
+      });
+    }
+
+    function registrarVenta() {
+      const productoId = document.getElementById('productoSelect').value;
+      const cantidad = parseInt(document.getElementById('cantidadVenta').value);
+      const valor = parseFloat(document.getElementById('valorUnitarioVenta').value);
+      const producto = productos.find(p => p.id === productoId);
+
+      if (!productoId || isNaN(cantidad) || isNaN(valor)) {
+        alert("Completa todos los campos correctamente.");
+        return;
+      }
+
+      const venta = {
+        factura: facturaVenta,
+        id: producto.id,
+        nombre: producto.nombre,
+        cantidad,
+        valorUnitario: valor,
+        total: cantidad * valor
+      };
+
+      if (modoEdicion) {
+        ventas[indexEditar] = venta;
+        modoEdicion = false;
+        indexEditar = null;
+      } else {
+        ventas.push(venta);
+        facturaVenta++;
+      }
+
+      actualizarTabla();
+      limpiarFormulario();
+    }
+
+    function actualizarTabla() {
+      const tabla = document.getElementById('tablaVentas');
+      tabla.innerHTML = '';
+      totalVentas = 0;
+
+      ventas.forEach((v, index) => {
+        const fila = tabla.insertRow();
+        fila.insertCell(0).textContent = v.factura;
+        fila.insertCell(1).textContent = v.id;
+        fila.insertCell(2).textContent = v.nombre;
+        fila.insertCell(3).textContent = v.cantidad;
+        fila.insertCell(4).textContent = `$${v.valorUnitario.toFixed(2)}`;
+        fila.insertCell(5).textContent = `$${v.total.toFixed(2)}`;
+        totalVentas += v.total;
+
+        const celdaAcciones = fila.insertCell(6);
+        const btnEditar = document.createElement('button');
+        btnEditar.textContent = 'Editar';
+        btnEditar.onclick = () => cargarParaEditar(index);
+
+        const btnEliminar = document.createElement('button');
+        btnEliminar.textContent = 'Eliminar';
+        btnEliminar.classList.add('eliminar');
+        btnEliminar.onclick = () => {
+          if (confirm(`¿Eliminar venta de ${v.nombre}?`)) {
+            ventas.splice(index, 1);
+            actualizarTabla();
+          }
+        };
+
+        celdaAcciones.appendChild(btnEditar);
+        celdaAcciones.appendChild(btnEliminar);
+      });
+
+      document.getElementById('totalVentas').textContent = totalVentas.toFixed(2);
+    }
+
+    function cargarParaEditar(index) {
+      const v = ventas[index];
+      document.getElementById('productoSelect').value = v.id;
+      document.getElementById('cantidadVenta').value = v.cantidad;
+      document.getElementById('valorUnitarioVenta').value = v.valorUnitario;
+      modoEdicion = true;
+      indexEditar = index;
+    }
+
+    function agregarProducto() {
+      const id = document.getElementById('nuevoIdProducto').value.trim();
+      const nombre = document.getElementById('nuevoNombreProducto').value.trim();
+
+      if (!id || !nombre) {
+        alert("Completa ID y nombre.");
+        return;
+      }
+
+      if (productos.some(p => p.id === id)) {
+        alert("Ya existe ese ID.");
+        return;
+      }
+
+      productos.push({ id, nombre });
+      cargarProductos();
+      alert("Producto agregado.");
+      document.getElementById('nuevoIdProducto').value = '';
+      document.getElementById('nuevoNombreProducto').value = '';
+    }
+
+    function limpiarFormulario() {
+      document.getElementById('productoSelect').value = '';
+      document.getElementById('cantidadVenta').value = '';
+      document.getElementById('valorUnitarioVenta').value = '';
+    }
+
+    window.onload = cargarProductos;
+  </script>
+
+</body>
+</html>
